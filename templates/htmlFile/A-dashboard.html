@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewreport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta name="author" content="Codeconvey" />
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-
+         touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
+    <meta name="author" content="Creative Tim">
+    <title>FRAS Attendance</title>
+    <!-- Favicon -->
+    <link rel="icon" href="static/assets/img/brand/favicon.png" type="image/png">
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+    <!-- Icons -->
+    <link rel="stylesheet" href="static/assets/vendor/nucleo/css/nucleo.css" type="text/css">
+    <link rel="stylesheet" href="static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
+    <!-- Argon CSS -->
+    <link rel="stylesheet" href="static/assets/css/argon.css?v=1.2.0" type="text/css">
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    <meta name="author" content="Codeconvey" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900&display=swap" rel="stylesheet">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css'>
+
+    <link rel="stylesheet" href="static\assets\css\123dashboard.css">
+    <link rel="stylesheet" href="static\assets\css\dome.css">
+    <link rel="stylesheet" href="static\assets\css\stylee.css">
+</head>
+
+<body>
+<input type="checkbox" id="nav-toggle">
+<div class="sidebar">
+	<div class="sidebar-brand">
+		<h2><span class="lab la-accusoft"></span>Attendance System</h2>
+	</div>
+	<div class="sidebar-menu">
+		<ul>
+			<li>
+				<a href="A-dashboard.html" class="active"><span class="las la-igloo"></span><span>Dashboard</span></a>
+			</li>
+            <li>
+                <a href="A-Admindashboard.html"><span class="las la-clipboard-list"></span><span>Profile</span></a>
+            </li>
+			<li>
+				<a href="A-Addstudent.html"><span class="las la-users"></span><span>Add Student</span></a>
+			</li>
+			<li>
+				<a href="A-Addteacher.html"><span class="las la-clipboard-list"></span><span>Add Teacher</span></a>
+			</li>
+			<li>
+				<a href="A-initialreport.html"><span class="las la-shopping-bag"></span><span>Initial Report</span></a>
+			</li>
+			<li>
+				<a href="A-massreport.html"><span class="las la-receipt"></span><span>Mass Report</span></a>
+			</li>
+			<li>
+                              <a href="A-massreport1.html"><span class="las la-user-circle"></span><span>report</span></a>
+                       </li>
+		</ul>
+	</div>
+</div>
+<div class="main-content">
+   <header>
+       <h2> 
+	 <label for="nav-toggle">
+	   <span class="las la-bars"></span>
+	 </label>
+	  Dashboard
+       </h2>
+       <div class="search-wrapper">
+        <span class="las la-search"></span>
+        <input type="search" placeholder="Search Here">
+       </div>
+       <div class="user-wrapper">
+	  <img src="static\assets\img\logo.jpg" width="40px" height="40px" alt="">
+       <div>
+	<h4>{{ uname }}</h4>
+    <form method="get">
+        <input type="submit" name="logoutbtn" value="Logout" style="background-color:white; border: none;">
+      </form>
+       </div>
+       </div>
+    </header>
+</body>
+</html>

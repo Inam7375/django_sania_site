@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewreport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
+  <meta name="author" content="Creative Tim">
+  <title>FRAS Attendance</title>
+  <!-- Favicon -->
+  <link rel="icon" href="static/assets/img/brand/favicon.png" type="image/png">
+  <!-- Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+  <!-- Icons -->
+  <link rel="stylesheet" href="static/assets/vendor/nucleo/css/nucleo.css" type="text/css">
+  <link rel="stylesheet" href="static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
+  <!-- Argon CSS -->
+  <link rel="stylesheet" href="static/assets/css/argon.css?v=1.2.0" type="text/css">
+  <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+  <meta name="author" content="Codeconvey" />
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900&display=swap" rel="stylesheet">
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css'>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css'>
+  <link rel="stylesheet" type="text/css" href="/static/am/css/main.css">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
+  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
+  <link rel="stylesheet" href="static\assets\css\add.css">
+</head>
+<body>
+<input type="checkbox" id="nav-toggle">
+<div class="sidebar">
+     <div class="sidebar-brand">
+	   <h2><span class="lab la-accusoft"></span>Attendance System</h2>
+     </div>
+     <div class="sidebar-menu">
+     <ul>
+      <li>
+        <a href="T-dashboard.html" class="active"><span class="las la-igloo"></span><span>Dashboard</span></a>
+      </li>
+      <li>
+        <a href="T-teacherdashboard.html"><span class="las la-users"></span><span>Profile</span></a>
+      </li>
+      <li>
+        <a href="T-attendance.html"><span class="las la-clipboard-list"></span><span>Attendance</span></a>
+      </li>
+      <li>
+        <a href="T-studentreport.html"><span class="las la-shopping-bag"></span><span>Student Report</span></a>
+      </li>
+      
+      
+    </ul>
+  </div>
+</div>
+
+    <div class="main-content">
+	<header>
+	 <h2> 
+	  <label for="nav-toggle">
+	    <span class="las la-bars"></span>
+	  </label>
+	    Dashboard
+	 </h2>
+	 <div class="search-wrapper">
+            <span class="las la-search"></span>
+            <input type="search" placeholder="Search Here">
+	 </div>
+
+	<div class="user-wrapper">
+	  <img src="static\assets\img\logo.jpg" width="40px" height="40px" alt="">
+	<div>
+		<h4>{{uname}}</h4>
+		<form method="get">
+      <input type="submit" name="logoutbtn" value="Logout" style="background-color:white; border: none;">
+    </form>
+	</div>
+	</div>
+	</header>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <div  class=".container-login100" style="background-image: url('static/assets/img/bg-01.jpg');">
+  <br>
+<center>
+	<h3 class="active1">Attendance System</h3>
+  <br>
+    <form method="post" action="" class="active">
+      {% csrf_token %}
+     <label class="act">Select Course</label>
+    <select name="whichcourse">
+       <option name="Multimedia" value="Multimedia" class="active2">Multimedia</option>
+       <option name="Project Management" value="Project Management">ProjectManagement</option>
+    </select>
+    <p>  </p>
+      <label class="act">Date ( yyyy-mm-dd )</label>
+      <input type="date" name="date" class="active2">
+      <p>Please select status:</p>
+      <input type="radio" id="html" name="status" value="HTML">
+      <label for="html">PRESENT</label><br>
+      <input type="radio" id="css" name="status" value="CSS">
+      <label for="css">ABSENT</label><br>
+       <br>
+      <input type="submit" class="btn btn-primary col-md-2 col-md-offset-5" value="Show!" name="batch" />
+      <br>
+      <br>
+      <br>
+    </form>
+    <br>
+    <br>
+     <table class="table table-stripped">
+      <thead>
+        <tr class="act">
+          <th scope="col">Student ID</th>
+          <th scope="col">Student Name</th>
+          <th scope="col">Department</th>
+          <th scope="col">Semester</th>
+          <th scope="col">Section</th>
+          <th scope="col">Email</th>
+          <th scope="col">Course</th>
+          <th scope="col">Attendance Status</th>
+          <th scope="col">datetime</th>
+          
+        </tr>
+     </thead>
+        <tbody>
+          {% for result in data %}
+            <tr>
+             <td>{{result.id}}</td>
+             <td>{{result.name}}</td>
+             <td>{{result.dept}}</td>
+             <td>{{result.sem}}</td>
+             <td>{{result.sec}}</td>
+             <td>{{result.email}}</td>
+             <td>{{result.course}}</td>
+             <td>{{result.status}}</td>
+             <td>{{result.date}}</td>
+           </tr>
+         
+           {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <!-- <input type="submit" class="btn btn-primary col-md-2 col-md-offset-10" value="Save!" name="att" /> -->
+    <br>
+    <br>
+    <br>
+</center>
+</div>
+
+   <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-157cd5b220a5c80d4ff8e0e70ac069bffd87a61252088146915e8726e5d9f147.js"></script>
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+  <script src="static\assets\js\ab.js"></script>
+</body>
+</html>

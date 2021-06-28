@@ -1,0 +1,32 @@
+.student-profile .card {
+    border-radius: 15px;
+    width: 100%;
+    margin-left: 140px;
+    
+}
+
+.student-profile .card .card-header .profile_img {
+    width: 300%;
+    height: 200px;
+    object-fit: cover;
+    margin: 10px auto;
+    border: 10px solid #ccc;
+    border-radius: 50%;
+}
+
+.student-profile .card h3 {
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.student-profile .card p {
+    font-size: 30px;
+    color: #000;
+}
+
+.student-profile .table th,
+.student-profile .table td {
+    font-size: 15px;
+    padding: 5px 10px;
+    color: #000;
+}

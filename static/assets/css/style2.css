@@ -1,0 +1,82 @@
+*{
+
+}
+body{
+	margin: 0%;
+	padding: 0%;
+	background-color: dodgerblue;
+
+}
+
+.navbar-dark{
+	font-family: 'Skranji', cursive;
+}
+.navbar{
+	background-color: transparent;
+	position: relative;
+	z-index: 4;
+}
+.nav-link{
+	font-size: 100px;
+	color: black;
+}
+
+.navbar-dark .navbar-brand{
+	color: black;
+	font-size: 50px;
+	text-transform: uppercase;
+	font-weight: bold;
+	letter-spacing: 4px;
+}
+
+
+.card{
+	text-align: center;
+	font-size: 50px;
+	border-color: black;
+	border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    width: 150px;   
+
+}
+.card-img-top{
+  border: 1px solid #ddd;
+
+}
+.card, .list-group-item{
+	background-color: #0000CD;
+}
+.card li{
+	color: #022735;
+	text-transform: uppercase;
+	font-family: 'Skranji', cursive;	
+}
+.card h5{
+	color: #022735;
+	text-transform: uppercase;
+	font-family: 'Skranji', cursive;
+}
+.card p{
+	color: #022735;
+	text-transform: uppercase;
+	font-family: 'Skranji', cursive;
+}
+.card a{
+	color: #022735;
+	text-transform: uppercase;
+	font-family: 'Skranji', cursive;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
