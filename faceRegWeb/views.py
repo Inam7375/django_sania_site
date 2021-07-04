@@ -111,11 +111,12 @@ def Addstudent(request):
                 semester = request.POST.get("st_sem","")
                 section = request.POST.get("st_sec","")
                 email = request.POST.get("st_email","")
+                password = request.POST.get("st_pass","")
                 fname = request.POST.get("st_fname","")
                 gender = request.POST.get("gender","")
                 phoneno = request.POST.get("st_num","")
                 try:
-                    student = Student(s_id = s_id, s_name = name, s_dept = department, s_semester = semester, s_section = section, s_email = email, s_Fathername=fname, s_gender=gender, s_phoneno=phoneno)
+                    student = Student(s_id = s_id, s_name = name, s_dept = department, s_semester = semester, s_section = section, s_email = email, s_password=password,s_Fathername=fname, s_gender=gender, s_phoneno=phoneno)
                     student.save();
                     return redirect("A-dashboard")
                 except:

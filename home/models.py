@@ -10,6 +10,7 @@ class Student(models.Model):
     s_semester = models.IntegerField()
     s_section = models.CharField(max_length=100)
     s_email = models.CharField(max_length=100)
+    s_password = models.CharField(max_length=100)
     s_Fathername = models.CharField(max_length=100)
     s_gender = models.CharField(max_length=20)
     s_phoneno = models.CharField(max_length=20)
