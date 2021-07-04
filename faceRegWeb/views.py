@@ -71,7 +71,20 @@ def Admindashboard(request):
         if request.GET.get('logoutbtn'):
             user_role=""
             return redirect('index')
-        return render(request, 'htmlFile/A-Admindashboard.html', {'uname': user_name})
+        cursor = connection.cursor()
+        cursor.execute(f'''
+            select * from admin where A_name = "{user_name}"
+        ''')
+        result = cursor.fetchone()
+        if result:
+            user_details = {}
+            user_details['name'] = result[1]
+            user_details['acyear'] = result[2]
+            user_details['gender'] = result[3]
+            user_details['qual'] = result[4]
+            user_details['cell_no'] = result[5]
+            user_details['email'] = result[6]
+        return render(request, 'htmlFile/A-Admindashboard.html', {'uname': user_name, 'user':user_details})
     return redirect('index')
 
 def Addstudent(request):
@@ -109,7 +122,7 @@ def Addstudent(request):
                     return render(request, 'htmlFile/A-Addstudent.html', {'msg': 'Fill in all the fields'})
         # else:
         #     return render(request, 'htmlFile/A-Addstudent.html', {'msg': 'Fill in all the fields'})
-        return render(request, 'htmlFile/A-Addstudent.html')
+        return render(request, 'htmlFile/A-Addstudent.html', {'uname': user_name})
     return redirect('index')
 
 def Addteacher(request):
@@ -343,7 +356,21 @@ def teacherdashboard(request):
         user_name = ""
         return redirect('index')
     if user_role == "teacher":
-        return render(request, 'htmlFile/T-teacherdashboard.html', {'uname':user_name})
+        cursor = connection.cursor()
+        cursor.execute(f'''
+            select * from teacher where t_name = "{user_name}"
+        ''')
+        result = cursor.fetchone()
+        if result:
+            user_details = {}
+            user_details['name'] = result[1]
+            user_details['gender'] = result[2]
+            user_details['qualification'] = result[3]
+            user_details['design'] = result[4]
+            user_details['email'] = result[5]
+            user_details['dep'] = result[6]
+            user_details['cell_no'] = result[7]
+        return render(request, 'htmlFile/T-teacherdashboard.html', {'uname':user_name, 'user':user_details})
     return redirect('index')
 
 def Tattendance(request):
@@ -369,6 +396,7 @@ def Tattendance(request):
                         select studentcourse.s_id,student.s_name, student.s_dept, student.s_semester, student.s_section, student.s_email,course.C_name,Attendance.Atten_Status,Date(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where C_name="{course}" and Atten_Status="{status}" and Date(Atten_datetime)="{date}";
 
                         ''')
+                        
                     else:
                         cursor.execute(f'''
                         select studentcourse.s_id,student.s_name, student.s_dept, student.s_semester, student.s_section, student.s_email,course.C_name,Attendance.Atten_Status,Date(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where C_name="{course}" and Date(Atten_datetime)="{date}";
@@ -492,7 +520,24 @@ def Sdashboard(request):
             user_role=""
             user_name = ""
             return redirect('index')
-        return render(request, 'htmlFile/S-Studentdashboard.html', {'uname':user_name})
+        cursor = connection.cursor()
+        cursor.execute(f'''
+            select * from student where s_name = "{ user_name }"
+        ''')
+        result = cursor.fetchone()
+        print(result)
+        if result:
+            user_details = {}
+            user_details['name'] = result[1]
+            user_details['fname'] = result[2]
+            user_details['gender'] = result[3]
+            user_details['qual'] = result[4]
+            user_details['email'] = result[5]
+            user_details['dept'] = result[6]
+            user_details['cell_no'] = result[7]
+            user_details['sec'] = result[8]
+            user_details['sem'] = result[9]
+        return render(request, 'htmlFile/S-Studentdashboard.html', {'uname':user_name, 'user':user_details})
     return redirect('index')
 
 def studentreport(request):
