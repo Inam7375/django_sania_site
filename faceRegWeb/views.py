@@ -9,6 +9,7 @@ from django.db import connection
 from home.models import Student, Teacher, Attendance, StdCourse, Course, Admin
 from django.contrib.auth import authenticate,login
 from django.contrib.auth.decorators import login_required
+from json import dumps
 
 user_role = ""
 user_name = ""
@@ -510,7 +511,12 @@ def S_dashboard(request):
             user_role=""
             user_name = ""
             return redirect('index')
-        return render(request, 'htmlFile/S-dashboard.html', {'uname':user_name})
+        attendance = [
+            ['present' , 20],
+            ['absent', 10]
+        ]   
+        somedata = dumps(attendance)
+        return render(request, 'htmlFile/S-dashboard.html', {'uname':user_name, 'somedata':somedata})
     return redirect('index')
 
 def Sdashboard(request):
@@ -550,21 +556,19 @@ def studentreport(request):
             user_name = ""
             return redirect('index')
         if request.method == 'POST':
-            st_name = request.POST.get("st_name")
             course = request.POST.get("whichcourse")
             try:
-                if st_name and course:
+                if course:
                     # student = Student.objects.get(s_id=s_id)
                     # attendance = Attendance.objects.get(sc_id = s_id)
                     # print(attendance)
                     cursor = connection.cursor()
                     cursor.execute(f'''
-                    select studentcourse.s_id,student.s_name,student.s_dept, student.s_email, student.s_semester, student.s_section, course.C_name,Attendance.Atten_Status,Attendance.Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "{st_name}" and C_name= "{course}";
+                    select studentcourse.s_id,student.s_name,student.s_dept, student.s_email, student.s_semester, student.s_section, course.C_name,Attendance.Atten_Status,Attendance.Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "{user_name}" and C_name= "{course}";
                     ''')
                     results = cursor.fetchall()
                     result = {}
                     if len(results) > 0:
-                        print("Yes man")
                         result['s_id'] = results[0][0]
                         result['s_name'] = results[0][1]
                         result['s_dept'] = results[0][2]
