@@ -107,6 +107,12 @@
 <br>
 <form method="post" class="active">
   {% csrf_token %}
+  <label class="act">Student Name:</label>
+  <select name="st_name" class="active22">
+    {% for std in stdnts %}
+      <option name="networking" value="{{std}}">{{std}}</option>
+    {% endfor %}
+  </select><br>
 <label class="act">Select Course:</label>
 <select name="whichcourse" class="active22">
    <option name="networking" value="Computer Networks">Computer Networks</option>
@@ -114,8 +120,14 @@
    <option name="swe" value="Multimedia">Multimedia</option>
 </select>
   <p>  </p>
-  <label class="act">Student Name:</label>
-  <input type="text" name="st_name" class="active2">
+  <label class="act">Select Section</label>
+    <select name="Section">
+       <option name="networking" value="A" class="active2">A</option>
+       <option name="swe" value="B">B</option>
+       <option name="swe" value="C">C</option>
+       <option name="swe" value="D">D</option>
+       <option name="swe" value="E">E</option>
+    </select><br>
   <br>
   <br>
   <input type="submit" class="btn btn-primary col-md-2 col-md-offset-5" value="Show!" name="batch" />

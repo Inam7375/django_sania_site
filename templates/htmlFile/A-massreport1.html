@@ -129,7 +129,11 @@
     <p>  </p>
     
       <label class="act">Date ( yyyy-mm-dd )</label>
-      <input type="date" name="date" class="active2">
+      {% if date %}
+         <input type="date" name="date" class="active2" value="{{date}}">
+      {% else %}
+         <input type="date" name="date" class="active2">
+      {% endif %}
       <br><br>
       <input type="submit" class="btn btn-primary col-md-2 col-md-offset-5" value="Show!" name="batch" />
       <br>

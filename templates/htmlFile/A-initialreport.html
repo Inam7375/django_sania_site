@@ -100,10 +100,15 @@
        <option name="networking" value="Computer Networks">Computer Networks</option>
        <option name="swe" value="Software Engineering">Software Engineering</option>
        <option name="swe" value="Multimedia">Multimedia</option>
-    </select>
-      <p>  </p>
+    </select><br>
       <label class="act">Student Name:</label>
-      <input type="text" name="st_name" class="active2">
+      <select name="st_name" class="active22">
+        {% for std in stdnts %}
+          <option name="networking" value="{{std}}">{{std}}</option>
+        {% endfor %}
+     </select>
+      <!-- <label class="act">Student Name:</label>
+      <input type="text" name="st_name" class="active2"> -->
       <br>
       <br>
       <input type="submit" class="btn btn-primary col-md-2 col-md-offset-5" value="Show!" name="batch" />

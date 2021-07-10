@@ -97,7 +97,11 @@
     </select>
     <p>  </p>
       <label class="act">Date ( yyyy-mm-dd )</label>
-      <input type="date" name="date" class="active2">
+      {% if date %}
+          <input type="date" name="date" class="active2" value="{{date}}">
+      {% else %}
+          <input type="date" name="date" class="active2">
+      {% endif %}      
       <p>Please select status:</p>
       <input type="radio" id="html" name="status" value="Present">
       <label for="html">Present</label><br>

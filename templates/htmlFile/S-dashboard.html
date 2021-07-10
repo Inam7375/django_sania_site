@@ -1,12 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewreport" content="width=device-width,initial-scale=1,maximum-scale=1">
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-  <meta name="author" content="Codeconvey" />
+	<meta charset="utf-8">
+	<meta name="viewreport" content="width=device-width,initial-scale=1,maximum-scale=1">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
@@ -21,42 +17,87 @@
   <link rel="stylesheet" href="static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
   <!-- Argon CSS -->
   <link rel="stylesheet" href="static/assets/css/argon.css?v=1.2.0" type="text/css">
-  <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
-  <meta name="author" content="Codeconvey" />
-  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900&display=swap" rel="stylesheet">
-  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css'>
-  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css'>
+	<link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+	<meta name="author" content="Codeconvey" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900&display=swap" rel="stylesheet"><link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css'>
 
-  <link rel="stylesheet" href="static\assets\css\123dashboard.css">
-  <link rel="stylesheet" href="static\assets\css\dome.css">
-  <link rel="stylesheet" href="static\assets\css\stylee.css">
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-  <script type="text/javascript">
-    google.charts.load("current", {packages:["corechart"]});
-    google.charts.setOnLoadCallback(drawChart);
-    function drawChart() {
-		var data = google.visualization.arrayToDataTable([
-			['Task', 'Hours per Day'],
-			['Work',     11],
-			['Eat',      2],
-			['Commute',  2],
-			['Watch TV', 2],
-			['Sleep',    7]
-		]);
-		
-      var options = {
-        title: 'My Daily Activities',
-        pieHole: 0.4,
-      };
+<link rel="stylesheet" type="text/css" href="/static/am/css/main.css">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+   
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
+	<link rel="stylesheet" href="static\assets\css\add.css">
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript">
+		google.charts.load("current", {packages:["corechart"]});
+		google.charts.setOnLoadCallback(drawChart);
+		function drawChart() {
+		  var present = JSON.parse("{{present|escapejs}}");
+		  var absent = JSON.parse("{{absent|escapejs}}");
 
-      var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
-      chart.draw(data, options);
-	  var somedata = "{{somedata}}";
-	  somedata = JSON.parse(somedata);
-	  console.log(somedata);
-    }
-  </script>
-</head>
+		  var data = google.visualization.arrayToDataTable([
+			['Attendance', 'Monthly Attendence'],
+			['Present',	present],
+			['Absent',	absent],
+		  ]);
+	
+		  var options = {
+			title: 'Monthly Attendance',
+			is3D: true,
+		  };
+	
+		  var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+		  chart.draw(data, options);
+		}
+	  </script>	
+
+<script type="text/javascript">
+  google.charts.load('current', {'packages':['bar']});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable([
+      ['Year', 'Sales', 'Expenses', 'Profit'],
+      ['2014', 1000, 400, 200],
+      ['2015', 1170, 460, 250],
+      ['2016', 660, 1120, 300],
+      ['2017', 1030, 540, 350]
+    ]);
+    
+    var options = {
+      chart: {
+        title: 'Company Performance',
+        subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+      }
+    };
+    
+    var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+  
+    chart.draw(data, google.charts.Bar.convertOptions(options));
+  
+    var present = JSON.parse("{{ypresent|escapejs}}");
+    var absent = JSON.parse("{{yabsent|escapejs}}");
+    
+    console.log(present);
+  }
+</script>
+
+<style>
+  .grid-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    padding: 10px;
+  }
+  .grid-item {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    font-size: 30px;
+    text-align: center;
+  }
+  </style>
+	</head>
 
 <body>
 <input type="checkbox" id="nav-toggle">
@@ -65,22 +106,19 @@
 		<h2><span class="lab la-accusoft"></span>Attendance System</h2>
 	</div>
 	<div class="sidebar-menu">
-		<ul>
-			<li>
-				<a href="S-dashboard.html" class="active"><span class="las la-igloo"></span><span>Dashboard</span></a>
-			</li>
-			<li>
-				<a href="S-Studentdashboard.html"><span class="las la-users"></span><span>Profile</span></a>
-			</li>
-			<li>
-				<a href="S-studentreport.html"><span class="las la-clipboard-list"></span><span>Attendance</span></a>
-			</li>
-		</ul>
-			
-		
-	</div>
+		    <ul>
+      <li>
+        <a href="S-dashboard.html" class="active"><span class="las la-igloo"></span><span>Dashboard</span></a>
+      </li>
+      <li>
+        <a href="S-Studentdashboard.html"><span class="las la-users"></span><span>Profile</span></a>
+      </li>
+      <li>
+        <a href="S-studentreport.html"><span class="las la-clipboard-list"></span><span>Attendance</span></a>
+      </li>
+    </ul>
+  </div>
 </div>
-
 <div class="main-content">
 	<header>
 		<h2> 
@@ -97,15 +135,52 @@
 			<img src="static\assets\img\logo.jpg" width="40px" height="40px" alt="">
 			<div>
 				<h4>{{ uname }}</h4>
-				<form method="get">
-				<input type="submit" name="logoutbtn" value="Logout" style="background-color:white; border: none;">
-				</form>
+    <form method="get">
+      <input type="submit" name="logoutbtn" value="Logout" style="background-color:white; border: none;">
+    </form>
 			</div>
 		</div>
 	</header>
-	<br><br>	
-	<div>
-		<div id="donutchart" style="width: 900px; height: 500px;"></div>
+   <br>
+   <br>
+   <br>
+   <br> 
+   <br>
+  <div  class=".container-login100" style="background-image: url('static/assets/img/bg-01.jpg');">
+  <br>
+<center>
+    <h3 class="active1">Monthly Report</h3>
+    <br>
+    <form method="post" class="active">
+      {% csrf_token %}
+	  <label for="date">Select month:</label>
+		{% if date %}
+	  		<input type="month" id="date" name="date" min="2015-03" value="{{date}}">
+		{% else %}
+			<input type="month" id="date" name="date" min="2015-03" value="2015-03">
+		{% endif %}
+      <p>  </p>
+      <br>
+      <br>
+      <input type="submit" class="btn btn-primary col-md-2 col-md-offset-5" value="Show!" name="batch" />
+      <br>
+      <br>
+      <br>
+    </form>
+    </div>
+    <br>
+    {% if msg %}
+    <div style="width: 70%; margin: 0px auto;" class="alert alert-danger" role="alert">
+      <h4>
+        {{ msg }}
+      </h4>
+    </div>
+    {% endif %}
+    <div class="grid-container">
+    <div id="columnchart_material" style="width: 250%; height: 500px;"></div>
+		<div class="grid-item" id="piechart_3d" style="width: 100%; height: 500px;"></div>
 	</div>
+</center>
+
 </body>
 </html>

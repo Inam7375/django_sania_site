@@ -1,6 +1,7 @@
 
 # views.py
 # I have created this file
+import json
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from home.models import Attendance, Userreg
@@ -45,14 +46,14 @@ def Adminlogin(request):
                     uname = user[0]
                     user_name = user[0]
                     user_role = 'admin'
-                    return render(request, 'htmlFile/A-dashboard.html', {'uname': uname})            
+                    return redirect('A-dashboard')            
                 else:
                     print("Not found")
             except Exception as e:
                 print(e)
         return render(request, 'htmlFile/A-Adminlogin.html')
     elif user_role=='admin':
-        return render(request, 'htmlFile/A-dashboard.html', {'uname': user_name})
+        return redirect('A-dashboard')
     return redirect('index')
 
 def dashboard(request):
@@ -170,6 +171,20 @@ def Addteacher(request):
 def initialreport(request):
     global user_role
     global user_name
+    cursor = connection.cursor()
+    cursor.execute(f'''
+    select s_name from student
+    ''')
+    students = []
+    stds = cursor.fetchall()
+    stds = list(stds)
+    for std in stds:
+        std = str(std)
+        std = std.strip("(")
+        std = std.strip(")")
+        std = std.strip(',')
+        std = std.strip("'")
+        students.append(std)
     if user_role == "admin":
         if request.GET.get('logoutbtn'):
             user_role=""
@@ -177,6 +192,7 @@ def initialreport(request):
             return redirect('index')
         if request.method == 'POST':
             st_name = request.POST.get("st_name")
+            print(st_name)
             course = request.POST.get("whichcourse")
             try:
                 if st_name and course:
@@ -205,14 +221,14 @@ def initialreport(request):
                                 result['s_presentClassses'] = result['s_presentClassses'] + 1
                             elif r[7] == 'absent':
                                 result['s_absentClassses'] = result['s_absentClassses'] + 1
-                        return render(request, 'htmlFile/A-initialreport.html', {'student': result, 'uname':user_name})
-                    return render(request, 'htmlFile/A-initialreport.html', {'msg': "No record found", 'uname':user_name})
+                        return render(request, 'htmlFile/A-initialreport.html', {'student': result, 'uname':user_name, 'stdnts': students})
+                    return render(request, 'htmlFile/A-initialreport.html', {'msg': "No record found", 'uname':user_name, 'stdnts': students})
                 else:    
-                    return render(request, 'htmlFile/A-initialreport.html', {'msg': 'Search credentials are missing', 'uname':user_name})
+                    return render(request, 'htmlFile/A-initialreport.html', {'msg': 'Search credentials are missing', 'uname':user_name, 'stdnts': students})
             except:
-                return render(request, 'htmlFile/A-initialreport.html', {'msg': 'Fields are required', 'uname':user_name})
-        return render(request, "htmlFile/A-initialreport.html", {'uname': user_name})
-    return render('index')
+                return render(request, 'htmlFile/A-initialreport.html', {'msg': 'Fields are required', 'uname':user_name, 'stdnts': students})
+        return render(request, "htmlFile/A-initialreport.html", {'uname': user_name, 'stdnts': students})
+    return redirect('index')
 
 def massreport(request):
     global user_role
@@ -257,11 +273,11 @@ def massreport(request):
                         temp_data['status'] = result[7]
                         temp_data['date'] = str(result[8])
                         data.append(temp_data)
-                    return render(request, 'htmlFile/A-massreport.html', {'data': data, 'uname':user_name})
+                    return render(request, 'htmlFile/A-massreport.html', {'data': data, 'uname':user_name, 'date':date})
                 else:    
-                    return render(request, 'htmlFile/A-massreport.html', {'msg': 'Search credentials are missing', 'uname':user_name})
+                    return render(request, 'htmlFile/A-massreport.html', {'msg': 'Search credentials are missing', 'uname':user_name, 'date':date})
             except:
-                return render(request, 'htmlFile/A-massreport.html', {'msg': 'Fields are required', 'uname':user_name})    
+                return render(request, 'htmlFile/A-massreport.html', {'msg': 'Fields are required', 'uname':user_name, 'date':date})    
         return render(request, 'htmlFile/A-massreport.html', {'uname': user_name})
     return redirect('index')
 
@@ -303,11 +319,11 @@ def massreport1(request):
                         temp_data['status'] = result[8]
                         temp_data['date'] = str(result[9])
                         data.append(temp_data)
-                    return render(request, 'htmlFile/A-massreport1.html', {'data': data, 'uname':user_name})
+                    return render(request, 'htmlFile/A-massreport1.html', {'data': data, 'uname':user_name, 'date':date})
                 else:    
-                    return render(request, 'htmlFile/A-massreport1.html', {'msg': 'Search credentials are missing', 'uname':user_name})
+                    return render(request, 'htmlFile/A-massreport1.html', {'msg': 'Search credentials are missing', 'uname':user_name, 'date':date})
             except:
-                return render(request, 'htmlFile/A-massreport1.html', {'msg': 'Fields are required', 'uname':user_name})
+                return render(request, 'htmlFile/A-massreport1.html', {'msg': 'Fields are required', 'uname':user_name, 'date':date})
         return render(request, 'htmlFile/A-massreport1.html', {'uname':user_name})
     return redirect('index')
 
@@ -328,14 +344,14 @@ def teacherlogin(request):
                     uname = user[0]
                     user_name = user[0]
                     user_role = 'teacher'
-                    return render(request, 'htmlFile/T-dashboard.html', {'uname':uname})            
+                    return redirect('T-dashboard')            
                 else:
                     print("Not found")
             except Exception as e:
                 print(e)
-        return render(request, 'htmlFile/T-teacherlogin.html', {'uname':user_name})
+        return render(request, 'htmlFile/T-teacherlogin.html')
     elif user_role=='teacher':
-        return render(request, 'htmlFile/T-dashboard.html', {'uname': user_name})
+        return redirect('T-dashboard')
     return redirect('index')
 
 
@@ -419,17 +435,31 @@ def Tattendance(request):
                         temp_data['status'] = result[7]
                         temp_data['date'] = str(result[8])
                         data.append(temp_data)
-                    return render(request, 'htmlFile/T-attendance.html', {'data': data, 'uname':user_name})
+                    return render(request, 'htmlFile/T-attendance.html', {'data': data, 'uname':user_name, 'date':date})
                 else:    
-                    return render(request, 'htmlFile/T-attendance.html', {'msg': 'Search credentials are missing', 'uname':user_name})
+                    return render(request, 'htmlFile/T-attendance.html', {'msg': 'Search credentials are missing', 'uname':user_name, 'date':date})
             except:
-                return render(request, 'htmlFile/T-attendance.html', {'msg': 'Fields are required', 'uname':user_name})
+                return render(request, 'htmlFile/T-attendance.html', {'msg': 'Fields are required', 'uname':user_name, 'date':date})
         return render(request, 'htmlFile/T-attendance.html', {'uname':user_name})
     return redirect('index')
 
 def Tstudentreport(request):
     global user_role
     global user_name
+    cursor = connection.cursor()
+    cursor.execute(f'''
+    select s_name from student
+    ''')
+    students = []
+    stds = cursor.fetchall()
+    stds = list(stds)
+    for std in stds:
+        std = str(std)
+        std = std.strip("(")
+        std = std.strip(")")
+        std = std.strip(',')
+        std = std.strip("'")
+        students.append(std)
     if user_role == "teacher":
         if request.GET.get('logoutbtn'):
             user_role=""
@@ -438,14 +468,16 @@ def Tstudentreport(request):
         if request.method == 'POST':
             st_name = request.POST.get("st_name")
             course = request.POST.get("whichcourse")
+            sec = request.POST.get("Section")
+
             try:
-                if st_name and course:
+                if st_name and course and sec:
                     # student = Student.objects.get(s_id=s_id)
                     # attendance = Attendance.objects.get(sc_id = s_id)
                     # print(attendance)
                     cursor = connection.cursor()
                     cursor.execute(f'''
-                    select studentcourse.s_id,student.s_name,student.s_dept, student.s_email, student.s_semester, student.s_section, course.C_name,Attendance.Atten_Status,Attendance.Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "{st_name}" and C_name= "{course}";
+                    select studentcourse.s_id,student.s_name,student.s_dept, student.s_email, student.s_semester, student.s_section, course.C_name,Attendance.Atten_Status,Attendance.Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "{st_name}" and C_name= "{course} and s_semester={sec}";
                     ''')
                     results = cursor.fetchall()
                     result = {}
@@ -465,13 +497,13 @@ def Tstudentreport(request):
                                 result['s_presentClassses'] = result['s_presentClassses'] + 1
                             elif r[7] == 'absent':
                                 result['s_absentClassses'] = result['s_absentClassses'] + 1
-                        return render(request, 'htmlFile/T-studentreport.html', {'student': result, 'uname':user_name})
-                    return render(request, 'htmlFile/T-studentreport.html', {'msg': "No record found", 'uname':user_name})
+                        return render(request, 'htmlFile/T-studentreport.html', {'student': result, 'uname':user_name, 'stdnts':students})
+                    return render(request, 'htmlFile/T-studentreport.html', {'msg': "No record found", 'uname':user_name, 'stdnts':students})
                 else:    
-                    return render(request, 'htmlFile/T-studentreport.html', {'msg': 'Search credentials are missing', 'uname':user_name})
+                    return render(request, 'htmlFile/T-studentreport.html', {'msg': 'Search credentials are missing', 'uname':user_name, 'stdnts':students})
             except:
-                return render(request, 'htmlFile/T-studentreport.html', {'msg': 'Fields are required', 'uname':user_name})
-        return render(request, "htmlFile/T-studentreport.html", {'uname':user_name})
+                return render(request, 'htmlFile/T-studentreport.html', {'msg': 'Fields are required', 'uname':user_name, 'stdnts':students})
+        return render(request, "htmlFile/T-studentreport.html", {'uname':user_name, 'stdnts':students})
     return redirect('index')
 
 def Studentlogin(request):
@@ -492,14 +524,14 @@ def Studentlogin(request):
                     uname = user[0]
                     user_name = user[0]
                     user_role = 'student'
-                    return render(request, 'htmlFile/S-dashboard.html', {'uname': uname})            
+                    return redirect('S-dashboard')            
                 else:
                     print("Not found")
             except Exception as e:
                 print(e)
         return render(request, 'htmlFile/S-Studentlogin.html')
     elif user_role=='admin':
-        return render(request, 'htmlFile/S-dashboard.html', {'uname': user_name})
+        return redirect('S-dashboard')
     return redirect('index')
     # return render(request, 'htmlFile/S-Studentlogin.html')
 
@@ -510,13 +542,63 @@ def S_dashboard(request):
         if request.GET.get('logoutbtn'):
             user_role=""
             user_name = ""
-            return redirect('index')
-        attendance = [
-            ['present' , 20],
-            ['absent', 10]
-        ]   
-        somedata = dumps(attendance)
-        return render(request, 'htmlFile/S-dashboard.html', {'uname':user_name, 'somedata':somedata})
+            return redirect('index') 
+        if request.method == 'POST':
+            date = request.POST.get("date")
+            if date:
+                year, month = date.split('-')
+                """
+                Fetching monthly data
+                """
+                cursor = connection.cursor()
+                cursor.execute(f'''
+                select studentcourse.s_id, monthname(Attendance.Atten_datetime), year(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "sania saeed" and Atten_Status="present" and month(Attendance.Atten_datetime) = '{month}' and year(Attendance.Atten_datetime) = '{year}';
+                ''')
+                results = cursor.fetchall()
+                present = len(results)
+                cursor.execute(f'''
+                select studentcourse.s_id, monthname(Attendance.Atten_datetime), year(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "sania saeed" and Atten_Status="absent" and month(Attendance.Atten_datetime) = '{month}' and year(Attendance.Atten_datetime) = '{year}';
+                ''')
+                results = cursor.fetchall()
+                absent = len(results)
+
+                """
+                Fetching yearly data
+                """
+                cursor.execute(f'''
+                select monthname(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "sania saeed" and Atten_Status="present" and year(Attendance.Atten_datetime) = '{year}';
+                ''')
+                results = cursor.fetchall()
+                print(results)
+                ypresent = {}
+                for mon in results:
+                    mon = str(mon)
+                    mon = mon.strip("(")
+                    mon = mon.strip(")")
+                    mon = mon.strip(',')
+                    mon = mon.strip("'")
+                    if mon not in ypresent:
+                        ypresent[mon] = 1
+                    else:
+                        ypresent[mon] = ypresent[mon] + 1
+                cursor.execute(f'''
+                select monthname(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "sania saeed" and Atten_Status="absent" and year(Attendance.Atten_datetime) = '{year}';
+                ''')
+                results = cursor.fetchall()
+                print(results)
+                yabsent = {}
+                for mon in results:
+                    mon = str(mon)
+                    mon = mon.strip("(")
+                    mon = mon.strip(")")
+                    mon = mon.strip(',')
+                    mon = mon.strip("'")
+                    if mon not in yabsent:
+                        yabsent[mon] = 1
+                    else:
+                        yabsent[mon] = yabsent[mon] + 1
+            return render(request, 'htmlFile/S-dashboard.html', {'uname':user_name, 'present':present, 'absent':absent, 'ypresent': json.dumps(ypresent), 'yabsent': json.dumps(yabsent), 'date':date})
+        return render(request, 'htmlFile/S-dashboard.html', {'uname':user_name, 'present':11, 'absent':12})
     return redirect('index')
 
 def Sdashboard(request):
