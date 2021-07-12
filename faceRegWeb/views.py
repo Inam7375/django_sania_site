@@ -59,11 +59,92 @@ def Adminlogin(request):
 def dashboard(request):
     global user_role
     global user_name
+    cursor = connection.cursor()
+    cursor.execute(f'''
+    select s_name from student
+    ''')
+    students = []
+    stds = cursor.fetchall()
+    stds = list(stds)
+    for std in stds:
+        std = str(std)
+        std = std.strip("(")
+        std = std.strip(")")
+        std = std.strip(',')
+        std = std.strip("'")
+        students.append(std)
     if user_role == "admin":
         if request.GET.get('logoutbtn'):
             user_role=""
             return redirect('index')
-        return render(request, 'htmlFile/A-dashboard.html', {'uname': user_name})
+        if request.method == 'POST':
+            date = request.POST.get("date")
+            std = request.POST.get("st_name")
+            if date and std:
+                year, month = date.split('-')
+                """
+                Fetching monthly data
+                """
+                cursor = connection.cursor()
+                cursor.execute(f'''
+                select studentcourse.s_id, monthname(Attendance.Atten_datetime), year(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "{std}" and Atten_Status="present" and month(Attendance.Atten_datetime) = '{month}' and year(Attendance.Atten_datetime) = '{year}';
+                ''')
+                results = cursor.fetchall()
+                present = len(results)
+                cursor.execute(f'''
+                select studentcourse.s_id, monthname(Attendance.Atten_datetime), year(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "{std}" and Atten_Status="absent" and month(Attendance.Atten_datetime) = '{month}' and year(Attendance.Atten_datetime) = '{year}' ;
+                ''')
+                results = cursor.fetchall()
+                absent = len(results)
+
+                """
+                Fetching yearly data
+                """
+                cursor.execute(f'''
+                select monthname(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "{std}" and Atten_Status="present" and year(Attendance.Atten_datetime) = '{year}' ;
+                ''')
+                results = cursor.fetchall()
+                ypresent = {}
+                for mon in results:
+                    mon = str(mon)
+                    mon = mon.strip("(")
+                    mon = mon.strip(")")
+                    mon = mon.strip(',')
+                    mon = mon.strip("'")
+                    if mon not in ypresent:
+                        ypresent[mon] = 1
+                    else:
+                        ypresent[mon] = ypresent[mon] + 1
+                cursor.execute(f'''
+                select monthname(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "{std}" and Atten_Status="absent" and year(Attendance.Atten_datetime) = '{year}' ;
+                ''')
+                results = cursor.fetchall()
+                yabsent = {}
+                for mon in results:
+                    mon = str(mon)
+                    mon = mon.strip("(")
+                    mon = mon.strip(")")
+                    mon = mon.strip(',')
+                    mon = mon.strip("'")
+                    if mon not in yabsent:
+                        yabsent[mon] = 1
+                    else:
+                        yabsent[mon] = yabsent[mon] + 1
+                
+                def Union(lst1, lst2):
+                    final_list = list(set(lst1) | set(lst2))
+                    return final_list
+                pkeys = list(ypresent.keys())
+                akeys = list(yabsent.keys())
+                keys = Union(pkeys, akeys)
+            return render(request, 'htmlFile/A-dashboard.html', {'uname':user_name, 'present':present, 'absent':absent, 'ypresent': json.dumps(ypresent), 'yabsent': json.dumps(yabsent), 'keys':json.dumps(keys), 'date':date, 'stdnts':students})
+        return render(request, 'htmlFile/A-dashboard.html', {'uname':user_name, 'present':11, 'absent':12, 'ypresent': json.dumps({
+            'june' : 15,
+            'may' : 12
+        }), 'yabsent': json.dumps({
+            'june' : 15,
+            'may' : 18
+        }), 'keys':json.dumps(['june', 'may']), 'stdnts':students})
     return redirect('index')
 
 def Admindashboard(request):
@@ -358,12 +439,93 @@ def teacherlogin(request):
 def Tdashboard(request):
     global user_role
     global user_name
+    cursor = connection.cursor()
+    cursor.execute(f'''
+    select s_name from student
+    ''')
+    students = []
+    stds = cursor.fetchall()
+    stds = list(stds)
+    for std in stds:
+        std = str(std)
+        std = std.strip("(")
+        std = std.strip(")")
+        std = std.strip(',')
+        std = std.strip("'")
+        students.append(std)
     if user_role == "teacher":
         if request.GET.get('logoutbtn'):
             user_role=""
             user_name = ""
             return redirect('index')
-        return render(request, 'htmlFile/T-dashboard.html', {'uname': user_name})
+        if request.method == 'POST':
+            date = request.POST.get("date")
+            std = request.POST.get("st_name")
+            if date and std:
+                year, month = date.split('-')
+                """
+                Fetching monthly data
+                """
+                cursor = connection.cursor()
+                cursor.execute(f'''
+                select studentcourse.s_id, monthname(Attendance.Atten_datetime), year(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "{std}" and Atten_Status="present" and month(Attendance.Atten_datetime) = '{month}' and year(Attendance.Atten_datetime) = '{year}';
+                ''')
+                results = cursor.fetchall()
+                present = len(results)
+                cursor.execute(f'''
+                select studentcourse.s_id, monthname(Attendance.Atten_datetime), year(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "{std}" and Atten_Status="absent" and month(Attendance.Atten_datetime) = '{month}' and year(Attendance.Atten_datetime) = '{year}' ;
+                ''')
+                results = cursor.fetchall()
+                absent = len(results)
+
+                """
+                Fetching yearly data
+                """
+                cursor.execute(f'''
+                select monthname(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "{std}" and Atten_Status="present" and year(Attendance.Atten_datetime) = '{year}' ;
+                ''')
+                results = cursor.fetchall()
+                ypresent = {}
+                for mon in results:
+                    mon = str(mon)
+                    mon = mon.strip("(")
+                    mon = mon.strip(")")
+                    mon = mon.strip(',')
+                    mon = mon.strip("'")
+                    if mon not in ypresent:
+                        ypresent[mon] = 1
+                    else:
+                        ypresent[mon] = ypresent[mon] + 1
+                cursor.execute(f'''
+                select monthname(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "{std}" and Atten_Status="absent" and year(Attendance.Atten_datetime) = '{year}' ;
+                ''')
+                results = cursor.fetchall()
+                yabsent = {}
+                for mon in results:
+                    mon = str(mon)
+                    mon = mon.strip("(")
+                    mon = mon.strip(")")
+                    mon = mon.strip(',')
+                    mon = mon.strip("'")
+                    if mon not in yabsent:
+                        yabsent[mon] = 1
+                    else:
+                        yabsent[mon] = yabsent[mon] + 1
+                
+                def Union(lst1, lst2):
+                    final_list = list(set(lst1) | set(lst2))
+                    return final_list
+                pkeys = list(ypresent.keys())
+                akeys = list(yabsent.keys())
+                keys = Union(pkeys, akeys)
+            return render(request, 'htmlFile/T-dashboard.html', {'uname':user_name, 'present':present, 'absent':absent, 'ypresent': json.dumps(ypresent), 'yabsent': json.dumps(yabsent), 'keys':json.dumps(keys), 'date':date, 'stdnts':students})
+        return render(request, 'htmlFile/T-dashboard.html', {'uname':user_name, 'present':11, 'absent':12, 'ypresent': json.dumps({
+            'june' : 15,
+            'may' : 12
+        }), 'yabsent': json.dumps({
+            'june' : 15,
+            'may' : 18
+        }), 'keys':json.dumps(['june', 'may']), 'stdnts':students})
     return redirect('index')
 
 def teacherdashboard(request):
@@ -552,12 +714,12 @@ def S_dashboard(request):
                 """
                 cursor = connection.cursor()
                 cursor.execute(f'''
-                select studentcourse.s_id, monthname(Attendance.Atten_datetime), year(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "sania saeed" and Atten_Status="present" and month(Attendance.Atten_datetime) = '{month}' and year(Attendance.Atten_datetime) = '{year}';
+                select studentcourse.s_id, monthname(Attendance.Atten_datetime), year(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "{user_name}" and Atten_Status="present" and month(Attendance.Atten_datetime) = '{month}' and year(Attendance.Atten_datetime) = '{year}';
                 ''')
                 results = cursor.fetchall()
                 present = len(results)
                 cursor.execute(f'''
-                select studentcourse.s_id, monthname(Attendance.Atten_datetime), year(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "sania saeed" and Atten_Status="absent" and month(Attendance.Atten_datetime) = '{month}' and year(Attendance.Atten_datetime) = '{year}';
+                select studentcourse.s_id, monthname(Attendance.Atten_datetime), year(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "{user_name}" and Atten_Status="absent" and month(Attendance.Atten_datetime) = '{month}' and year(Attendance.Atten_datetime) = '{year}';
                 ''')
                 results = cursor.fetchall()
                 absent = len(results)
@@ -566,10 +728,9 @@ def S_dashboard(request):
                 Fetching yearly data
                 """
                 cursor.execute(f'''
-                select monthname(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "sania saeed" and Atten_Status="present" and year(Attendance.Atten_datetime) = '{year}';
+                select monthname(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "{user_name}" and Atten_Status="present" and year(Attendance.Atten_datetime) = '{year}';
                 ''')
                 results = cursor.fetchall()
-                print(results)
                 ypresent = {}
                 for mon in results:
                     mon = str(mon)
@@ -582,10 +743,9 @@ def S_dashboard(request):
                     else:
                         ypresent[mon] = ypresent[mon] + 1
                 cursor.execute(f'''
-                select monthname(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "sania saeed" and Atten_Status="absent" and year(Attendance.Atten_datetime) = '{year}';
+                select monthname(Attendance.Atten_datetime) as Atten_datetime from Attendance left outer join studentcourse on studentcourse.SC_id=Attendance.sc_id left outer join student on student.s_id=studentcourse.S_id left outer join course on course.C_id=studentcourse.c_id where s_name= "{user_name}" and Atten_Status="absent" and year(Attendance.Atten_datetime) = '{year}';
                 ''')
                 results = cursor.fetchall()
-                print(results)
                 yabsent = {}
                 for mon in results:
                     mon = str(mon)
@@ -597,8 +757,21 @@ def S_dashboard(request):
                         yabsent[mon] = 1
                     else:
                         yabsent[mon] = yabsent[mon] + 1
-            return render(request, 'htmlFile/S-dashboard.html', {'uname':user_name, 'present':present, 'absent':absent, 'ypresent': json.dumps(ypresent), 'yabsent': json.dumps(yabsent), 'date':date})
-        return render(request, 'htmlFile/S-dashboard.html', {'uname':user_name, 'present':11, 'absent':12})
+                
+                def Union(lst1, lst2):
+                    final_list = list(set(lst1) | set(lst2))
+                    return final_list
+                pkeys = list(ypresent.keys())
+                akeys = list(yabsent.keys())
+                keys = Union(pkeys, akeys)
+            return render(request, 'htmlFile/S-dashboard.html', {'uname':user_name, 'present':present, 'absent':absent, 'ypresent': json.dumps(ypresent), 'yabsent': json.dumps(yabsent), 'keys':json.dumps(keys), 'date':date})
+        return render(request, 'htmlFile/S-dashboard.html', {'uname':user_name, 'present':11, 'absent':12, 'ypresent': json.dumps({
+            'june' : 15,
+            'may' : 12
+        }), 'yabsent': json.dumps({
+            'june' : 15,
+            'may' : 18
+        }), 'keys':json.dumps(['june', 'may'])})
     return redirect('index')
 
 def Sdashboard(request):
